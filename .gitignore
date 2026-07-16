@@ -1,0 +1,16 @@
+.venv/
+.uv-cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+
+dataset/raw/*
+!dataset/raw/.gitkeep
+dataset/labeled/*
+!dataset/labeled/.gitkeep
+
+artifacts/*
+!artifacts/.gitkeep
+*.pt
+*.weights
