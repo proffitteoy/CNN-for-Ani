@@ -6,4 +6,4 @@ ablation,position,5-fold CV light augmentation,746,746,0.4715,0.0550,,historical
 holdout,position,temporal holdout,1618,250,0.6590,0.1960,1.3640,completed,"single-source temporal tail"
 holdout,wide_position,cross-batch xinyouku holdout,2000,184,0.8234,0.5000,0.7065,completed,"one held-out source batch"
 alpha1,wide_position_ensemble,training snapshot,2477,2477,0.9165,0.7206,0.3339,completed,"not an independent evaluation"
-final,position_ds_ensemble,multi-source holdout,2447,481,,,,training,"218 test samples appeared in historical experiment manifests"
+final,position_ds_ensemble,multi-source holdout,2447,481,0.9880,0.9605,0.0478,completed,"source-balanced holdout; 218 test samples appeared in historical experiment manifests"

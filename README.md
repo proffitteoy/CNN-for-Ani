@@ -6,17 +6,17 @@
 
 面向 Animeko 固定四位数字验证码的轻量 CNN 科研仓库。项目完整开放训练代码、人工标注样本、实验记录、alpha1 权重与最终模型的评估/生产流水线，目标是在 Python 与后续纯 Kotlin 实现之间复现相同的 40 个 logits。
 
-> 发布状态（2026-07-17）：`captcha-alpha1` 已开放；最终 Position-DS 三模型集成仍在训练和独立评估，完成前不宣称最终准确率，也不以训练集指标替代测试集结果。
+> 发布状态（2026-07-17）：最终 Position-DS 三模型集成与 `captcha-alpha1` 均已开放。最终模型在 481 张多来源留出集上达到 96.05% ExactAcc@1；生产 ONNX 使用全部 3,203 张冻结样本重训。
 
 ## 开放资产
 
 | 资产 | 状态 | 内容 | 可信度说明 |
 | --- | --- | --- | --- |
 | [`models/captcha-alpha1/`](models/captcha-alpha1/) | 可下载、可推理 | 三个 `wide_position` 模型的 logits 平均 ONNX、报告、训练 manifest | 91.65% CharAcc / 72.06% ExactAcc 是 2,477 张训练快照指标，不是独立测试结论 |
-| [`models/final/`](models/final/) | 训练中 | 最终 Position-DS 模型卡和发布门槛 | 仅在多来源留出集 ExactAcc@1 ≥ 60% 后发布生产 ONNX |
+| [`models/final/`](models/final/) | 已发布 | 最终 Position-DS 生产 ONNX、eval/prod 报告、split、manifest 和哈希 | 481 张多来源留出 ExactAcc@1 96.05%；其中 218 张参与过早期方案选择 |
 | [`models/experimental/`](models/experimental/) | 已开放 | 早期 Position 与 Wide Position 单模型 ONNX、split、报告和导出校验 | 仅用于复现实验演进，不建议部署 |
 | [`dataset/captcha-v1/`](dataset/captcha-v1/) | 已开放 | 3,203 张人工标注 PNG、来源/批次/哈希 manifest | 三个来源各 1,000 张正式样本，另含 203 张 preflight 样本 |
-| [`experiments/`](experiments/) | 已开放 | 结构消融、跨批次留出、alpha1 与最终阶段状态 | 明确区分 CV、holdout、训练快照和未完成结果 |
+| [`experiments/`](experiments/) | 已开放 | 结构消融、跨批次留出、alpha1 与最终结果 | 明确区分 CV、holdout、训练快照和生产重训 |
 
 ## 快速开始
 
@@ -31,11 +31,11 @@ uv run ruff check .
 uv run ruff format --check .
 ```
 
-使用开放的 alpha1 ONNX 识别一张样本：
+使用最终 ONNX 识别一张样本：
 
 ```powershell
 uv run python examples/predict_onnx.py `
-  models/captcha-alpha1/captcha.onnx `
+  models/final/captcha.onnx `
   dataset/captcha-v1/images/0000_7a831cfc-a80e-4b52-9a39-9603bcff967d-1784115459408-0838.png
 ```
 
@@ -80,7 +80,17 @@ uv run python examples/predict_onnx.py `
 
 评估阶段固定 481 张多来源留出集：新优酷 161、次元城动画 160、饭团动漫 160；其余 2,447 张训练、275 张验证。该留出集有 218 张曾出现在早期实验 manifest 中，因此属于“多来源留出评估”，不是完全盲测。报告必须同时给出总体和分来源指标。只有 eval 集成 ExactAcc@1 达到 60% 才能进入全量 3,203 张生产重训；理想线为 65%。
 
-最终模型完成后的发布内容、校验项和指标占位见 [`models/final/MODEL_CARD.md`](models/final/MODEL_CARD.md)。
+最终 eval 已通过发布线：
+
+| 指标 | 总体（481） | 新优酷（161） | 次元城动画（160） | 饭团动漫（160） |
+| --- | ---: | ---: | ---: | ---: |
+| CharAcc | 98.80% | 98.45% | 99.22% | 98.75% |
+| ExactAcc@1 | 96.05% | 96.27% | 96.88% | 95.00% |
+| HammingError | 0.0478 | 0.0621 | 0.0313 | 0.0500 |
+
+总体 ExactAcc@2/@3/@5 分别为 98.34% / 98.54% / 98.75%，四个位置准确率分别为 98.75% / 98.34% / 99.38% / 98.75%。最终生产模型按 eval 选出的成员更新数 `6750 / 5500 / 5500` 在全部 3,203 张样本上重训；生产训练不生成用于宣传的训练集准确率，可信指标始终来自 eval 报告。
+
+公开的 `captcha.onnx` 大小为 1,173,896 bytes，SHA-256 为 `97731e093e77c69a768de81ed9d565bb5f81c6bef88df261b6dd460bca2cfd9a`。ONNX checker 通过，PyTorch/ONNX Runtime 最大 logits 误差为 `1.5497208e-06`。完整指标与文件说明见 [`models/final/MODEL_CARD.md`](models/final/MODEL_CARD.md)。
 
 ## alpha1
 
@@ -94,7 +104,7 @@ uv run python examples/predict_onnx.py `
 - PyTorch/ONNX Runtime 最大 logits 误差 `4.7683716e-06`；
 - 输入 `[B, 1, 32, 96]`，输出 `[B, 4, 10]`。
 
-这些准确率只说明训练快照拟合情况，不代表跨来源泛化能力。部署前应等待最终 Position-DS 多来源评估，或在自己的独立数据上重新验证。
+这些准确率只说明训练快照拟合情况，不代表跨来源泛化能力；新部署应优先使用最终 Position-DS，并继续在自己的独立数据上验证。
 
 ## 开放数据集
 

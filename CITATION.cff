@@ -7,7 +7,7 @@ authors:
 repository-code: "https://github.com/proffitteoy/CNN-for-Ani"
 url: "https://github.com/proffitteoy/CNN-for-Ani"
 license: Apache-2.0
-version: "alpha1"
+version: "1.0.0"
 date-released: 2026-07-17
 keywords:
   - captcha recognition

@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "released_at": "2026-07-17",
+  "model_name": "position_ds",
+  "eval_version": "captcha-final-eval_20260717_090514",
+  "production_version": "captcha-final-prod_20260717_124015",
+  "member_parameter_count": 93904,
+  "ensemble_parameter_count": 281712,
+  "production_sample_count": 3203,
+  "evaluation": {
+    "sample_count": 481,
+    "char_accuracy": 0.9880457520484924,
+    "exact_accuracy": 0.9604989886283875,
+    "hamming_error": 0.04781704768538475,
+    "exact_accuracy_at_2": 0.9833679795265198,
+    "exact_accuracy_at_3": 0.9854469895362854,
+    "exact_accuracy_at_5": 0.987525999546051,
+    "historical_test_overlap_count": 218,
+    "release_threshold": 0.6,
+    "release_passed": true
+  },
+  "onnx": {
+    "path": "captcha.onnx",
+    "size_bytes": 1173896,
+    "sha256": "97731e093e77c69a768de81ed9d565bb5f81c6bef88df261b6dd460bca2cfd9a",
+    "opset_version": 17,
+    "input_contract": ["batch", 1, 32, 96],
+    "output_contract": ["batch", 4, 10],
+    "max_absolute_error": 1.5497207641601562e-06,
+    "onnx_checker_passed": true
+  },
+  "evaluation_onnx": {
+    "path": "captcha-final-eval.onnx",
+    "size_bytes": 1173896,
+    "sha256": "7236033844544992e438145592ec844059e6bde2a76268367e185d726ad39bd1",
+    "max_absolute_error": 1.430511474609375e-06,
+    "onnx_checker_passed": true
+  }
+}
