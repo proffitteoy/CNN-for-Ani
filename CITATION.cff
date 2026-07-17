@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use CNN for Ani, its models, or its dataset, please cite this repository."
+title: "CNN for Ani: a reproducible four-digit captcha CNN research repository"
+type: software
+authors:
+  - family-names: "proffitteoy"
+repository-code: "https://github.com/proffitteoy/CNN-for-Ani"
+url: "https://github.com/proffitteoy/CNN-for-Ani"
+license: Apache-2.0
+version: "alpha1"
+date-released: 2026-07-17
+keywords:
+  - captcha recognition
+  - convolutional neural network
+  - reproducible machine learning
+  - ONNX

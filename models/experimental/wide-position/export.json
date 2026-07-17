@@ -1,0 +1,68 @@
+{
+  "created_at": "2026-07-16T10:52:52.554413+08:00",
+  "source_report": "artifacts\\final_wide_position_20260716_104107\\report.json",
+  "checkpoint": "artifacts\\final_wide_position_20260716_104107\\model.pt",
+  "onnx_path": "artifacts\\final_wide_position_20260716_104107\\captcha.onnx",
+  "onnx_sha256": "e8412a11eef56bfec1fe00e5a6313cbfaf13e0b47336fbbb351496ed7797ff87",
+  "opset_version": 17,
+  "input_contract": [
+    "batch",
+    1,
+    32,
+    96
+  ],
+  "output_contract": [
+    "batch",
+    4,
+    10
+  ],
+  "single_sample": {
+    "filename": "0004_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784114852554-0019.png",
+    "input_shape": [
+      1,
+      1,
+      32,
+      96
+    ],
+    "output_shape": [
+      1,
+      4,
+      10
+    ],
+    "max_absolute_error": 5.7220458984375e-06,
+    "mean_absolute_error": 1.4767050515729352e-06
+  },
+  "batch_sample": {
+    "filenames": [
+      "0004_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784114852554-0019.png",
+      "0022_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784114876429-0037.png",
+      "0025_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784115034674-0164.png",
+      "0115_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784114859750-0024.png",
+      "0121_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784115010077-0144.png",
+      "0183_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784115026319-0157.png",
+      "0210_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784114917937-0070.png",
+      "0301_d6615c37-825a-4adc-9644-e4e8f0e41d6f-1784114865981-0029.png"
+    ],
+    "input_shape": [
+      8,
+      1,
+      32,
+      96
+    ],
+    "output_shape": [
+      8,
+      4,
+      10
+    ],
+    "max_absolute_error": 7.62939453125e-06,
+    "mean_absolute_error": 1.926720187839237e-06
+  },
+  "maximum_verified_absolute_error": 7.62939453125e-06,
+  "onnx_checker_passed": true,
+  "onnxruntime_provider": "CPUExecutionProvider",
+  "versions": {
+    "torch": "2.13.0+cpu",
+    "onnx": "1.22.0",
+    "onnxruntime": "1.27.0"
+  }
+}
