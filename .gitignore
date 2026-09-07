@@ -14,3 +14,13 @@ artifacts/*
 !artifacts/.gitkeep
 *.pt
 *.weights
+
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.synctex.gz
+paper/.tectonic-local/
+paper/build/
+paper/figures/*.png
+paper/figures/*.svg

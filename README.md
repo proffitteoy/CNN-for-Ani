@@ -151,6 +151,10 @@ uv run python -m cnn_for_ani.final_pipeline --phase prod `
 
 长训练启动时会冻结文件列表、split、配置和随机状态；续跑会校验这些状态，不能偷偷吸收新样本或修改超参数。完整历史指标见 [`experiments/README.md`](experiments/README.md)，执行依据见 [`docs/实现过程.md`](docs/实现过程.md) 与 [`docs/最终方案.md`](docs/最终方案.md)。
 
+## 论文
+
+本仓库同时包含一篇基于该项目撰写的深度学习课程论文，围绕固定四位数字验证码识别，说明数据集构建、Position-DS 模型设计、训练与评估过程、误差分析，以及模型在 Animeko 中的部署实践。可直接阅读 [`论文 PDF`](paper/main.pdf)，或查看 [`LaTeX 源码`](paper/main.tex) 和 [`参考文献`](paper/references.bib)。
+
 ## 仓库结构
 
 ```text
@@ -163,6 +167,7 @@ examples/                 最小推理示例
 scripts/                  开放数据集重建与校验工具
 artifacts/                本地训练运行目录，默认不提交
 docs/                     实验规范与理论依据
+paper/                    课程论文、参考文献与论文插图
 ```
 
 ## 限制与负责任使用
