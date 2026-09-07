@@ -17,7 +17,6 @@ from matplotlib import font_manager
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 from PIL import Image
 
-
 ROOT = Path(__file__).resolve().parents[2]
 FIGURE_DIR = Path(__file__).resolve().parent
 MANIFEST = ROOT / "dataset" / "captcha-v1" / "manifest.csv"
@@ -359,7 +358,8 @@ def figure_evolution() -> None:
     ax.text(
         0.0,
         -0.22,
-        "* G 为训练快照；各背景区的数据划分与训练预算不同，折线表示项目演化，不构成严格同条件排名。",
+        "* G 为训练快照；各背景区的数据划分与训练预算不同，"
+        "折线表示项目演化，不构成严格同条件排名。",
         transform=ax.transAxes,
         fontsize=6.6,
         color=MID,
