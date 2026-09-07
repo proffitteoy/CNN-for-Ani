@@ -6,9 +6,8 @@ import argparse
 import re
 import shutil
 from pathlib import Path
-from tkinter import BOTH, LEFT, RIGHT, Button, Entry, Frame, Label, StringVar, Tk, messagebox
 
-from PIL import Image, ImageTk
+from PIL import Image
 
 IMAGE_SUFFIXES = {".bmp", ".jpeg", ".jpg", ".png", ".webp"}
 LABEL_PATTERN = re.compile(r"^\d{4}$")
@@ -58,46 +57,55 @@ class LabelingApp:
     """逐张显示验证码，并把人工输入复制到 labeled 目录。"""
 
     def __init__(self, raw_dir: Path, labeled_dir: Path) -> None:
+        import tkinter as tk
+        from tkinter import messagebox
+
+        from PIL import ImageTk
+
+        self._messagebox = messagebox
+        self._image_tk = ImageTk
         self.raw_dir = raw_dir
         self.labeled_dir = labeled_dir
         self.images = unlabeled_raw_images(raw_dir, labeled_dir)
         self.index = 0
         self.saved_count = 0
-        self.photo: ImageTk.PhotoImage | None = None
+        self.photo: object | None = None
 
-        self.root = Tk()
+        self.root = tk.Tk()
         self.root.title("CNN for Ani 验证码人工标注")
         self.root.geometry("900x520")
         self.root.protocol("WM_DELETE_WINDOW", self.quit)
 
-        self.status_var = StringVar()
-        self.path_var = StringVar()
-        self.label_var = StringVar()
-        self.error_var = StringVar()
+        self.status_var = tk.StringVar()
+        self.path_var = tk.StringVar()
+        self.label_var = tk.StringVar()
+        self.error_var = tk.StringVar()
 
-        Label(self.root, textvariable=self.status_var, font=("Microsoft YaHei UI", 12)).pack(pady=8)
-        Label(self.root, textvariable=self.path_var, wraplength=860).pack(pady=4)
-        self.image_label = Label(self.root)
-        self.image_label.pack(expand=True, fill=BOTH, padx=12, pady=12)
+        tk.Label(self.root, textvariable=self.status_var, font=("Microsoft YaHei UI", 12)).pack(
+            pady=8
+        )
+        tk.Label(self.root, textvariable=self.path_var, wraplength=860).pack(pady=4)
+        self.image_label = tk.Label(self.root)
+        self.image_label.pack(expand=True, fill=tk.BOTH, padx=12, pady=12)
 
-        input_frame = Frame(self.root)
+        input_frame = tk.Frame(self.root)
         input_frame.pack(pady=8)
-        Label(input_frame, text="四位数字：").pack(side=LEFT)
-        self.entry = Entry(
+        tk.Label(input_frame, text="四位数字：").pack(side=tk.LEFT)
+        self.entry = tk.Entry(
             input_frame, textvariable=self.label_var, width=10, font=("Consolas", 18)
         )
-        self.entry.pack(side=LEFT, padx=8)
+        self.entry.pack(side=tk.LEFT, padx=8)
         self.entry.bind("<Return>", self.save_current)
 
-        button_frame = Frame(self.root)
+        button_frame = tk.Frame(self.root)
         button_frame.pack(pady=6)
-        Button(button_frame, text="保存并下一张 (Enter)", command=self.save_current).pack(
-            side=LEFT, padx=6
+        tk.Button(button_frame, text="保存并下一张 (Enter)", command=self.save_current).pack(
+            side=tk.LEFT, padx=6
         )
-        Button(button_frame, text="跳过", command=self.skip_current).pack(side=LEFT, padx=6)
-        Button(button_frame, text="退出", command=self.quit).pack(side=RIGHT, padx=6)
+        tk.Button(button_frame, text="跳过", command=self.skip_current).pack(side=tk.LEFT, padx=6)
+        tk.Button(button_frame, text="退出", command=self.quit).pack(side=tk.RIGHT, padx=6)
 
-        Label(self.root, textvariable=self.error_var, fg="red").pack(pady=4)
+        tk.Label(self.root, textvariable=self.error_var, fg="red").pack(pady=4)
         self.show_current()
 
     def run(self) -> None:
@@ -123,7 +131,7 @@ class LabelingApp:
         relative_path = path.relative_to(self.raw_dir)
         self.status_var.set(f"待标注 {self.index + 1}/{total}，本次已保存 {self.saved_count} 张")
         self.path_var.set(str(relative_path))
-        self.photo = ImageTk.PhotoImage(self.display_image(path))
+        self.photo = self._image_tk.PhotoImage(self.display_image(path))
         self.image_label.configure(image=self.photo, text="")
         self.entry.configure(state="normal")
         self.entry.focus_set()
@@ -168,7 +176,7 @@ class LabelingApp:
 
     def quit(self) -> None:
         if self.saved_count > 0:
-            messagebox.showinfo("标注已暂停", f"本次新增 {self.saved_count} 张标注。")
+            self._messagebox.showinfo("标注已暂停", f"本次新增 {self.saved_count} 张标注。")
         self.root.destroy()
 
 
